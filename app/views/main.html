@@ -1,0 +1,83 @@
+<div class="header">
+  <h1 class="text-muted">Get value by ID with AngularJS</h1>
+</div>
+
+<div class="row marketing">
+  <h2>How to check the value from an ID in an other Object?</h2>
+  <p>Oké the title is maybe not super-clear. But let me explain it to you! I'm building an application with SailsJS and AngularJS. Both are super cool MVC frameworks. And no i'm not gonna tell you all about it, but i wanna describe which problem i had and how i solve it. So you can save a lot of time by reading this.</p>
+  <h3>My situation</h3>
+  <p>So i'm not the best Javascript programmer (not yet), but i'm learning it everyday better and better. But i was building an application where people can add skills, but these skills are in a couple different categories. On the page of the overview of the skills i added an table where all the skills would come. But i want to add the title of the category to.</p><p>So in a form people can select the category, where i put the ID of the category in an selectbox. So not the title will be in the object of the skill, but the ID. Because an ID is always unique.</p><p>But now i got this problem: How do i check in the ng-repeat if that ID match with an ID of the Categories object, and if so? What is the title of the category. And i know some may say that's easy, but it was not for me ;-)</p>
+  <h3>Solution</h3>
+  <p> Okay, i'm not gonna make it to long! You need the solution to, to get further with your project. So here is the code:</p>
+  <h3>AngularJS code:</h3>
+  <pre lang="java">
+
+    var myModule = angular.module('myModule', []);
+
+    myModule.controller('myController', ['$scope',  function($scope) {
+        $scope.skills = [
+            {id: '25', title: 'WordPress', skillCat: '533ac874f7d909710656225f'}, 
+            {id: '94', title: 'AngularJS', skillCat: '533ac874f7d909710656294f'},
+            {id: '99', title: 'Bootstrap', skillCat: '533ac874f7d909710656299f'},
+            {id: '61', title: 'Javascript', skillCat: '533ac874f7d909710656210f'}, 
+            {id: '10', title: 'CSS3', skillCat: '533ac874f7d909710656210f'},
+        ];
+        $scope.categories = [
+            {id: '533ac874f7d909710656299f', title: 'Framework'}, 
+            {id: '533ac874f7d909710656210f', title: 'Language'},
+            {id: '533ac874f7d909710656299f', title: 'Other'}, 
+            {id: '533ac874f7d909710656225f', title: 'CMS'},
+            {id: '533ac874f7d909710656294f', title: 'Libary'}, 
+            {id: '533ac874f7d909710656210f', title: 'Technique'},
+        ];
+    }]);
+
+    myModule.filter('lookInside', function(){
+        return function(item, array){
+            var name = 'no';
+            for (var i=0; i < array.length; i++){
+                if (array[i].id == item.skillCat) {
+                    // return array[i].title;
+                    return array[i].title;
+                }
+            }
+        };
+    });
+
+  </pre>
+  <p><i>
+    <strong>The Controller:</strong><br />
+    In this way the controller has the data (i know if you check MVC the controller doesn't do this, but in this way it's okay). 1 Array for the skills and the other for the categories. Each skill has an categorie id.<br />
+  </i></p>
+  <p><i>
+    <strong>The Filter:</strong><br />
+    The filter checks each item of the array (the array of categories) if it stores an id that is equal to the Skill category ID. If it is equal than the title of that ID will be returned.
+  </i></p>
+  <h3>HTML code:</h3>
+  <pre lang="html" ng-non-bindable>
+   
+    &lt;body ng-app=&quot;myModule&quot;&gt;
+      &lt;div ng-controller=&quot;myController&quot;&gt;
+          &lt;div ng-repeat=&quot;skill in skills&quot;&gt;
+                  &lt;h3&gt;{{skill.title}}&lt;/h3&gt; =  
+                  {{skill | lookInside: categories}}
+           &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/body&gt;
+  
+  </pre>
+  <p><i>
+    <strong>The HTML</strong><br />
+    This is how you implement the AngularJS code inside of the HTML.
+  </i></p>
+
+  <h3>Check the result:</h3>
+  <div ng-controller="myController">
+    <ol>
+      <li ng-repeat="skill in skills">
+          <strong>{{skill.title}}</strong> =  
+        {{skill | lookInside: categories}}
+      </li>
+    </ol>
+  </div>
+</div>
